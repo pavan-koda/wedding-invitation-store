@@ -7,18 +7,35 @@ window.addEventListener('scroll', () => {
 // ========== MOBILE MENU ==========
 const hamburger = document.getElementById('hamburger');
 const navLinks = document.getElementById('navLinks');
+const navClose = document.getElementById('navClose');
+const navOverlay = document.getElementById('navOverlay');
+
+function openMenu() {
+    navLinks.classList.add('active');
+    navOverlay.classList.add('active');
+    hamburger.classList.add('open');
+}
+
+function closeMenu() {
+    navLinks.classList.remove('active');
+    navOverlay.classList.remove('active');
+    hamburger.classList.remove('open');
+}
 
 hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    hamburger.classList.toggle('open');
+    if (navLinks.classList.contains('active')) {
+        closeMenu();
+    } else {
+        openMenu();
+    }
 });
+
+navClose.addEventListener('click', closeMenu);
+navOverlay.addEventListener('click', closeMenu);
 
 // Close menu on link click
 navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        hamburger.classList.remove('open');
-    });
+    link.addEventListener('click', closeMenu);
 });
 
 // ========== SCROLL REVEAL ==========
