@@ -206,7 +206,12 @@ img { max-width: 100%; display: block; }
     color: #2d1b4e;
 }
 
-.logo-icon { font-size: 24px; }
+.logo-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
 .logo-dot { color: #ff416c; }
 
 .nav-links {
@@ -1343,7 +1348,7 @@ img { max-width: 100%; display: block; }
 
 @media (max-width: 480px) {
     .logo { font-size: 17px; }
-    .logo-icon { font-size: 20px; }
+    .logo-img { width: 38px; height: 38px; }
 
     .hero {
         padding: 90px 16px 40px;
