@@ -1646,3 +1646,183 @@ img { max-width: 100%; display: block; }
     0%, 100% { filter: brightness(1) drop-shadow(0 0 3px #ff6b00); }
     50% { filter: brightness(1.4) drop-shadow(0 0 9px #ff9500); }
 }
+
+/* ========== OFFERS SECTION ========== */
+.offers-section {
+    padding: 80px 0;
+    background: linear-gradient(180deg, #07000f 0%, #100020 100%);
+    position: relative;
+    overflow: hidden;
+    display: none;
+}
+
+.offers-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(233,30,99,0.5), transparent);
+}
+
+.offers-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(233,30,99,0.5), transparent);
+}
+
+.offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.offer-card {
+    background: var(--offer-bg, linear-gradient(135deg,#e91e63,#ad1457));
+    border-radius: 20px;
+    padding: 24px 22px;
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.45);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.offer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 22px 60px rgba(0,0,0,0.55);
+}
+
+.offer-card::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    pointer-events: none;
+}
+
+.offer-card::after {
+    content: '';
+    position: absolute;
+    bottom: -35px; left: -35px;
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    pointer-events: none;
+}
+
+.offer-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1.5px solid rgba(255,255,255,0.45);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.offer-title {
+    font-size: 21px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.3;
+    font-family: 'Playfair Display', serif;
+}
+
+.offer-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.82);
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+.offer-price {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.offer-original {
+    font-size: 18px;
+    color: rgba(255,255,255,0.5);
+    text-decoration: line-through;
+}
+
+.offer-sale {
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.offer-countdown {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.offer-count-item {
+    background: rgba(0,0,0,0.28);
+    border-radius: 10px;
+    padding: 8px 12px;
+    text-align: center;
+    min-width: 54px;
+}
+
+.offer-count-item span {
+    display: block;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+}
+
+.offer-count-item small {
+    font-size: 9px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 1px;
+}
+
+.offer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 25px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+
+.offer-btn:hover {
+    background: rgba(255,255,255,0.28);
+    border-color: rgba(255,255,255,0.75);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+    .offers-grid {
+        grid-template-columns: 1fr;
+    }
+    .offer-count-item { min-width: 46px; padding: 6px 10px; }
+    .offer-count-item span { font-size: 18px; }
+}

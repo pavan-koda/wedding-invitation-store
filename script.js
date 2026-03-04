@@ -206,7 +206,7 @@ const demoData = {
   proposal: {
     title: '💝 Proposal Page',
     wa: 'Hi!%20I%20want%20a%20Proposal%20Page',
-    html: `<div style="background:linear-gradient(160deg,#0d0008 0%,#2d0018 50%,#0d0008 100%);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;font-family:Georgia,serif;color:#fce4ec;text-align:center;position:relative;overflow:hidden;"><div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;"><span style="position:absolute;font-size:14px;left:8%;animation:dmFall 4s linear infinite;">🌹</span><span style="position:absolute;font-size:12px;left:80%;animation:dmFall 5s linear infinite 1s;">❤️</span><span style="position:absolute;font-size:10px;left:45%;animation:dmFall 6s linear infinite 2s;">✨</span></div><p style="font-size:8px;letter-spacing:3px;color:#f48fb1;text-transform:uppercase;margin:0 0 8px;">A Magical Moment</p><div style="font-size:48px;margin:0 0 8px;animation:dmBounce 2s ease-in-out infinite;">💍</div><p style="font-size:20px;font-weight:bold;color:#fff;font-style:italic;margin:0 0 6px;">Will You</p><p style="font-size:26px;font-weight:800;background:linear-gradient(135deg,#e91e63,#f48fb1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 6px;">Marry Me?</p><p style="font-size:11px;color:#f48fb1;margin:0 0 14px;line-height:1.6;">"You're the missing piece<br>of my heart... 💕"</p><div style="display:flex;gap:10px;margin-bottom:14px;justify-content:center;"><div style="background:linear-gradient(135deg,#e91e63,#c2185b);color:#fff;padding:10px 20px;border-radius:25px;font-size:12px;font-weight:700;animation:dmPulse 1.5s ease-in-out infinite;">YES! 💍</div><div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:10px 20px;border-radius:25px;font-size:12px;font-weight:700;">Hmm... 😅</div></div><p style="font-size:9px;color:#f48fb1;margin:0;">— with all my love, Rahul —</p></div>`
+    html: `<div style="background:linear-gradient(160deg,#0d0008 0%,#2d0018 40%,#1a000d 100%);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;font-family:Georgia,serif;color:#fce4ec;text-align:center;position:relative;overflow:hidden;"><div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;"><span style="position:absolute;font-size:18px;left:2%;animation:dmFall 3s linear infinite;">🌹</span><span style="position:absolute;font-size:14px;left:14%;animation:dmFall 4s linear infinite 0.4s;">🌸</span><span style="position:absolute;font-size:12px;left:27%;animation:dmFall 3.5s linear infinite 0.9s;">🌺</span><span style="position:absolute;font-size:16px;left:40%;animation:dmFall 5s linear infinite 0.2s;">🌷</span><span style="position:absolute;font-size:10px;left:52%;animation:dmFall 4.5s linear infinite 1.4s;">🌸</span><span style="position:absolute;font-size:14px;left:63%;animation:dmFall 3.8s linear infinite 0.7s;">🌹</span><span style="position:absolute;font-size:12px;left:76%;animation:dmFall 4.2s linear infinite 1.8s;">🌺</span><span style="position:absolute;font-size:10px;left:88%;animation:dmFall 3.3s linear infinite 1.1s;">💮</span><span style="position:absolute;font-size:8px;left:20%;animation:dmFall 5s linear infinite 2.4s;">🌼</span><span style="position:absolute;font-size:8px;left:72%;animation:dmFall 4s linear infinite 2.9s;">🌸</span><span style="position:absolute;font-size:6px;left:47%;animation:dmFall 4.8s linear infinite 0.6s;">✨</span><span style="position:absolute;font-size:10px;left:34%;animation:dmFall 3.5s linear infinite 1.9s;">💕</span><span style="position:absolute;font-size:8px;left:58%;animation:dmFall 4s linear infinite 2.2s;">🌷</span></div><p style="font-size:11px;margin:0 0 4px;letter-spacing:1px;">🌸 🌹 💐 🌹 🌸</p><p style="font-size:8px;letter-spacing:3px;color:#f48fb1;text-transform:uppercase;margin:0 0 6px;">A Magical Moment</p><div style="font-size:46px;margin:0 0 5px;animation:dmBounce 2s ease-in-out infinite;">💍</div><p style="font-size:20px;font-weight:bold;color:#fff;font-style:italic;margin:0 0 3px;">Will You</p><p style="font-size:24px;font-weight:800;background:linear-gradient(135deg,#e91e63,#f48fb1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 6px;">Marry Me?</p><p style="font-size:10px;color:#f48fb1;margin:0 0 8px;line-height:1.6;">"You're the missing piece<br>of my heart... 💕"</p><p style="font-size:13px;margin:0 0 8px;letter-spacing:1px;">🌷 🌸 🌺 🌸 🌷</p><div style="display:flex;gap:8px;margin-bottom:8px;justify-content:center;"><div style="background:linear-gradient(135deg,#e91e63,#c2185b);color:#fff;padding:10px 18px;border-radius:25px;font-size:12px;font-weight:700;animation:dmPulse 1.5s ease-in-out infinite;">YES! 💍</div><div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:10px 18px;border-radius:25px;font-size:12px;font-weight:700;">Hmm... 😅</div></div><p style="font-size:9px;color:#f48fb1;margin:0;">— with all my love, Rahul 🌹 —</p></div>`
   },
   annivsurprise: {
     title: '🎀 Anniversary Surprise',
@@ -294,3 +294,88 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDemo(
 document.querySelectorAll('.btn-demo').forEach(btn => {
     btn.addEventListener('click', () => openDemo(btn.dataset.demo));
 });
+
+// ========== OFFERS SECTION ==========
+function getOfferTimeLeft(validUntil) {
+    const end = new Date(validUntil);
+    end.setHours(23, 59, 59, 999);
+    const diff = end - new Date();
+    if (diff <= 0) return null;
+    return {
+        d: Math.floor(diff / 86400000),
+        h: Math.floor((diff % 86400000) / 3600000),
+        m: Math.floor((diff % 3600000) / 60000),
+        s: Math.floor((diff % 60000) / 1000)
+    };
+}
+
+function renderOfferCard(o) {
+    const tl = getOfferTimeLeft(o.validUntil);
+    if (!tl) return '';
+    const themeGrads = {
+        pink:   'linear-gradient(135deg,#e91e63 0%,#ad1457 100%)',
+        purple: 'linear-gradient(135deg,#9c27b0 0%,#6a1b9a 100%)',
+        orange: 'linear-gradient(135deg,#ff6f00 0%,#e65100 100%)',
+        blue:   'linear-gradient(135deg,#1565c0 0%,#0277bd 100%)',
+        green:  'linear-gradient(135deg,#2e7d32 0%,#1b5e20 100%)'
+    };
+    const grad = themeGrads[o.theme] || themeGrads.pink;
+    return `
+    <div class="offer-card" style="--offer-bg:${grad};">
+        <div class="offer-badge">${o.badge}</div>
+        <h3 class="offer-title">${o.title}</h3>
+        ${o.description ? `<p class="offer-desc">${o.description}</p>` : ''}
+        ${(o.originalPrice || o.salePrice) ? `
+        <div class="offer-price">
+            ${o.originalPrice ? `<span class="offer-original">₹${o.originalPrice}</span>` : ''}
+            ${o.salePrice ? `<span class="offer-sale">₹${o.salePrice}</span>` : ''}
+        </div>` : ''}
+        <div class="offer-countdown" id="countdown-${o.id}">
+            <div class="offer-count-item"><span>${String(tl.d).padStart(2,'0')}</span><small>Days</small></div>
+            <div class="offer-count-item"><span>${String(tl.h).padStart(2,'0')}</span><small>Hrs</small></div>
+            <div class="offer-count-item"><span>${String(tl.m).padStart(2,'0')}</span><small>Min</small></div>
+            <div class="offer-count-item"><span>${String(tl.s).padStart(2,'0')}</span><small>Sec</small></div>
+        </div>
+        <a href="https://api.whatsapp.com/send?phone=918500752407&text=Hi!%20I%20want%20to%20grab%20the%20offer%3A%20${encodeURIComponent(o.title)}" target="_blank" class="offer-btn">
+            <i class="fa-brands fa-whatsapp"></i> Grab This Offer
+        </a>
+    </div>`;
+}
+
+function loadOffers() {
+    try {
+        const offers = JSON.parse(localStorage.getItem('wis_offers') || '[]');
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        const active = offers.filter(o => {
+            if (!o.active) return false;
+            const end = new Date(o.validUntil); end.setHours(23, 59, 59, 999);
+            return end >= today;
+        });
+        const section = document.getElementById('offers-section');
+        if (!section) return;
+        if (active.length === 0) { section.style.display = 'none'; return; }
+        section.style.display = 'block';
+        document.getElementById('offersGrid').innerHTML = active.map(renderOfferCard).join('');
+        // Live countdown
+        setInterval(() => {
+            active.forEach(o => {
+                const el = document.getElementById(`countdown-${o.id}`);
+                if (!el) return;
+                const tl = getOfferTimeLeft(o.validUntil);
+                if (!tl) { el.innerHTML = '<span style="color:rgba(255,255,255,0.5);font-size:12px;">Expired</span>'; return; }
+                const spans = el.querySelectorAll('.offer-count-item span');
+                if (spans[0]) spans[0].textContent = String(tl.d).padStart(2,'0');
+                if (spans[1]) spans[1].textContent = String(tl.h).padStart(2,'0');
+                if (spans[2]) spans[2].textContent = String(tl.m).padStart(2,'0');
+                if (spans[3]) spans[3].textContent = String(tl.s).padStart(2,'0');
+            });
+        }, 1000);
+        // Trigger scroll reveal
+        document.querySelectorAll('.offer-card').forEach(el => {
+            el.classList.add('reveal-on-scroll');
+            revealObserver.observe(el);
+        });
+    } catch(e) { console.error('Offers error:', e); }
+}
+
+loadOffers();

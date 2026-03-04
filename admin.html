@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel – WeddingInvitation.Store</title>
+    <link rel="shortcut icon" href="assets/img/logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a16;
+            color: #e0e0f0;
+            min-height: 100vh;
+        }
+
+        /* ========= LOGIN ========= */
+        #loginWrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #0a0a16 0%, #1a0a2e 100%);
+        }
+
+        .login-card {
+            background: #16162a;
+            border-radius: 24px;
+            padding: 44px 36px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 24px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .login-card .logo-emoji { font-size: 36px; margin-bottom: 10px; display: block; }
+
+        .login-card h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .login-card .sub {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .input-wrap {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .input-wrap i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            font-size: 14px;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            padding: 13px 14px 13px 42px;
+            background: #0a0a16;
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .input-wrap input:focus {
+            outline: none;
+            border-color: #e91e63;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-login:hover { opacity: 0.9; }
+
+        .login-error {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* ========= ADMIN WRAP ========= */
+        #adminWrap { display: none; min-height: 100vh; }
+
+        .topbar {
+            background: #10101e;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 0 24px;
+            height: 62px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-logo {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .topbar-logo span {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-pill {
+            background: rgba(233,30,99,0.15);
+            border: 1px solid rgba(233,30,99,0.3);
+            color: #e91e63;
+            font-size: 10px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .topbar-right { display: flex; align-items: center; gap: 10px; }
+
+        .btn-back-site, .btn-logout {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-back-site {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #aaa;
+        }
+
+        .btn-back-site:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+        .btn-logout {
+            background: rgba(244,67,54,0.1);
+            border: 1px solid rgba(244,67,54,0.2);
+            color: #f44336;
+        }
+
+        .btn-logout:hover { background: rgba(244,67,54,0.2); }
+
+        /* ========= MAIN LAYOUT ========= */
+        .admin-main {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        @media (max-width: 800px) {
+            .admin-main { grid-template-columns: 1fr; }
+        }
+
+        /* ========= CARDS ========= */
+        .acard {
+            background: #16162a;
+            border-radius: 18px;
+            padding: 26px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .acard-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .acard-title i { color: #e91e63; }
+
+        .acard-title .count {
+            font-size: 12px;
+            color: #555;
+            font-weight: 400;
+            margin-left: auto;
+        }
+
+        /* ========= FORM ========= */
+        .fgroup { margin-bottom: 14px; }
+
+        .fgroup label {
+            display: block;
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .req { color: #e91e63; }
+
+        .fgroup input,
+        .fgroup textarea,
+        .fgroup select {
+            width: 100%;
+            padding: 11px 14px;
+            background: #0a0a16;
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .fgroup input:focus,
+        .fgroup textarea:focus,
+        .fgroup select:focus {
+            outline: none;
+            border-color: #e91e63;
+        }
+
+        .fgroup textarea { resize: vertical; min-height: 72px; }
+
+        .fgroup select option { background: #16162a; }
+
+        .frow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .fcheck {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .fcheck input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #e91e63;
+            cursor: pointer;
+        }
+
+        .fcheck label {
+            font-size: 13px;
+            color: #bbb;
+            cursor: pointer;
+        }
+
+        .factions { display: flex; gap: 10px; }
+
+        .btn-save {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-save:hover { opacity: 0.9; }
+
+        .btn-cancel {
+            padding: 12px 18px;
+            background: transparent;
+            border: 1.5px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #bbb;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s;
+            display: none;
+        }
+
+        .btn-cancel:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+
+        /* ========= STATS BAR ========= */
+        .stats-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .spill {
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .spill.active   { background: rgba(76,175,80,0.15);  color: #4caf50; border: 1px solid rgba(76,175,80,0.25); }
+        .spill.inactive { background: rgba(255,152,0,0.12);  color: #ff9800; border: 1px solid rgba(255,152,0,0.22); }
+        .spill.expired  { background: rgba(244,67,54,0.12);  color: #f44336; border: 1px solid rgba(244,67,54,0.22); }
+
+        /* ========= OFFER ITEMS ========= */
+        .offer-item {
+            background: #0e0e20;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 13px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .offer-item.active  { border-left: 3px solid #4caf50; }
+        .offer-item.inactive { border-left: 3px solid #ff9800; }
+        .offer-item.expired { border-left: 3px solid #f44336; opacity: 0.65; }
+
+        .oi-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .oi-head-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+        .oi-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            color: #fff;
+        }
+
+        .oi-title { font-size: 14px; font-weight: 600; color: #fff; }
+
+        .oi-status {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+
+        .oi-desc { font-size: 12px; color: #777; margin-bottom: 8px; line-height: 1.5; }
+
+        .oi-meta {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 11px;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .oi-meta i { margin-right: 3px; }
+
+        .oi-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        .ba-edit, .ba-toggle, .ba-delete {
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .ba-edit {
+            background: rgba(100,181,246,0.1);
+            border-color: rgba(100,181,246,0.2);
+            color: #64b5f6;
+        }
+        .ba-edit:hover { background: rgba(100,181,246,0.2); }
+
+        .ba-toggle.activate {
+            background: rgba(76,175,80,0.1);
+            border-color: rgba(76,175,80,0.2);
+            color: #4caf50;
+        }
+        .ba-toggle.activate:hover { background: rgba(76,175,80,0.2); }
+
+        .ba-toggle.deactivate {
+            background: rgba(255,152,0,0.1);
+            border-color: rgba(255,152,0,0.2);
+            color: #ff9800;
+        }
+        .ba-toggle.deactivate:hover { background: rgba(255,152,0,0.2); }
+
+        .ba-delete {
+            background: rgba(244,67,54,0.1);
+            border-color: rgba(244,67,54,0.2);
+            color: #f44336;
+        }
+        .ba-delete:hover { background: rgba(244,67,54,0.2); }
+
+        .empty-state {
+            text-align: center;
+            padding: 44px 20px;
+            color: #444;
+        }
+
+        .empty-state i { font-size: 38px; display: block; margin-bottom: 14px; }
+        .empty-state p { font-size: 14px; line-height: 1.7; }
+
+        /* ========= TOAST ========= */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1a1a2e;
+            border: 1px solid rgba(76,175,80,0.35);
+            color: #4caf50;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 9999;
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 320px;
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.err  { border-color: rgba(244,67,54,0.35); color: #f44336; }
+
+        /* ========= THEME DOTS ========= */
+        .theme-preview {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tdot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.15);
+            cursor: pointer;
+            transition: transform 0.15s;
+            title: '';
+        }
+
+        .tdot:hover { transform: scale(1.2); }
+    </style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginWrap">
+    <div class="login-card">
+        <span class="logo-emoji">🛡️</span>
+        <h2>Admin Panel</h2>
+        <p class="sub">WeddingInvitation.Store</p>
+        <div class="input-wrap">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="password" placeholder="Enter admin password" autocomplete="current-password">
+        </div>
+        <button class="btn-login" onclick="login()">
+            <i class="fa-solid fa-right-to-bracket"></i> Login
+        </button>
+        <p class="login-error" id="loginError">Incorrect password. Try again.</p>
+    </div>
+</div>
+
+<!-- ===== ADMIN DASHBOARD ===== -->
+<div id="adminWrap">
+
+    <div class="topbar">
+        <div class="topbar-left">
+            <span class="topbar-logo">Wedding<span>Invitation</span>.Store</span>
+            <span class="admin-pill">Admin</span>
+        </div>
+        <div class="topbar-right">
+            <a href="index.html" class="btn-back-site">
+                <i class="fa-solid fa-arrow-left"></i> Back to Site
+            </a>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <div class="admin-main">
+
+        <!-- ---- ADD / EDIT FORM ---- -->
+        <div class="acard">
+            <h3 class="acard-title" id="formHeading">
+                <i class="fa-solid fa-plus"></i> Add New Offer
+            </h3>
+            <form id="offerForm" onsubmit="handleSubmit(event)">
+
+                <div class="fgroup">
+                    <label>Offer Title <span class="req">*</span></label>
+                    <input type="text" id="fTitle" placeholder="e.g. Valentine's Combo Deal" required>
+                </div>
+
+                <div class="fgroup">
+                    <label>Badge Text <span class="req">*</span></label>
+                    <input type="text" id="fBadge" placeholder="e.g. 50% OFF  |  FLASH SALE  |  COMBO" required>
+                </div>
+
+                <div class="fgroup">
+                    <label>Description</label>
+                    <textarea id="fDesc" placeholder="Describe what's included, conditions, etc."></textarea>
+                </div>
+
+                <div class="frow">
+                    <div class="fgroup">
+                        <label>Original Price (₹)</label>
+                        <input type="number" id="fOriginal" placeholder="e.g. 198" min="0">
+                    </div>
+                    <div class="fgroup">
+                        <label>Sale Price (₹)</label>
+                        <input type="number" id="fSale" placeholder="e.g. 99" min="0">
+                    </div>
+                </div>
+
+                <div class="frow">
+                    <div class="fgroup">
+                        <label>Valid Until <span class="req">*</span></label>
+                        <input type="date" id="fValidUntil" required>
+                    </div>
+                    <div class="fgroup">
+                        <label>Theme Color</label>
+                        <select id="fTheme">
+                            <option value="pink">🌸 Pink / Romantic</option>
+                            <option value="purple">💜 Purple / Premium</option>
+                            <option value="orange">🧡 Orange / Festival</option>
+                            <option value="blue">💙 Blue / Corporate</option>
+                            <option value="green">💚 Green / General</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="fcheck">
+                    <input type="checkbox" id="fActive" checked>
+                    <label for="fActive">Active — show on website immediately</label>
+                </div>
+
+                <div class="factions">
+                    <button type="submit" class="btn-save" id="submitBtn">
+                        <i class="fa-solid fa-plus"></i> Add Offer
+                    </button>
+                    <button type="button" class="btn-cancel" id="cancelBtn" onclick="resetForm()">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ---- OFFERS LIST ---- -->
+        <div class="acard">
+            <h3 class="acard-title">
+                <i class="fa-solid fa-tag"></i> All Offers
+                <span class="count" id="offersCount"></span>
+            </h3>
+            <div class="stats-row" id="statsRow"></div>
+            <div id="offersList"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+    const ADMIN_PASSWORD = 'admin123';
+    const OFFERS_KEY = 'wis_offers';
+
+    let offers = [];
+    let editingId = null;
+
+    const loginWrap  = document.getElementById('loginWrap');
+    const adminWrap  = document.getElementById('adminWrap');
+
+    /* ---- AUTH ---- */
+    function login() {
+        const pwd = document.getElementById('password').value;
+        const err = document.getElementById('loginError');
+        if (pwd === ADMIN_PASSWORD) {
+            loginWrap.style.display = 'none';
+            adminWrap.style.display = 'block';
+            loadOffers();
+        } else {
+            err.style.display = 'block';
+        }
+    }
+
+    function logout() {
+        adminWrap.style.display = 'none';
+        loginWrap.style.display = 'flex';
+        document.getElementById('password').value = '';
+        document.getElementById('loginError').style.display = 'none';
+    }
+
+    document.getElementById('password').addEventListener('keydown', e => {
+        if (e.key === 'Enter') login();
+    });
+
+    /* ---- TOAST ---- */
+    function showToast(msg, type = 'ok') {
+        const t = document.getElementById('toast');
+        t.innerHTML = `<i class="fa-solid ${type === 'ok' ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ${msg}`;
+        t.className = `toast show${type === 'err' ? ' err' : ''}`;
+        setTimeout(() => t.className = 'toast', 3200);
+    }
+
+    /* ---- HELPERS ---- */
+    function isExpired(validUntil) {
+        const d = new Date(validUntil); d.setHours(23,59,59,999);
+        return d < new Date();
+    }
+
+    function getStatus(o) {
+        if (!o.active) return 'inactive';
+        if (isExpired(o.validUntil)) return 'expired';
+        return 'active';
+    }
+
+    function fmtDate(d) {
+        return new Date(d + 'T23:59:59').toLocaleDateString('en-IN', {
+            day: 'numeric', month: 'short', year: 'numeric'
+        });
+    }
+
+    /* ---- CRUD ---- */
+    function loadOffers() {
+        offers = JSON.parse(localStorage.getItem(OFFERS_KEY) || '[]');
+        renderList();
+    }
+
+    function saveAndRefresh() {
+        localStorage.setItem(OFFERS_KEY, JSON.stringify(offers));
+        renderList();
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        const data = {
+            title:         document.getElementById('fTitle').value.trim(),
+            badge:         document.getElementById('fBadge').value.trim(),
+            description:   document.getElementById('fDesc').value.trim(),
+            originalPrice: document.getElementById('fOriginal').value.trim(),
+            salePrice:     document.getElementById('fSale').value.trim(),
+            validUntil:    document.getElementById('fValidUntil').value,
+            theme:         document.getElementById('fTheme').value,
+            active:        document.getElementById('fActive').checked
+        };
+
+        if (editingId !== null) {
+            const i = offers.findIndex(o => o.id === editingId);
+            if (i !== -1) offers[i] = { ...offers[i], ...data };
+            showToast('Offer updated!');
+        } else {
+            offers.unshift({ id: Date.now(), ...data });
+            showToast('Offer added! It will appear on the site.');
+        }
+
+        saveAndRefresh();
+        resetForm();
+    }
+
+    function editOffer(id) {
+        const o = offers.find(o => o.id === id);
+        if (!o) return;
+        editingId = id;
+        document.getElementById('fTitle').value       = o.title;
+        document.getElementById('fBadge').value       = o.badge;
+        document.getElementById('fDesc').value        = o.description || '';
+        document.getElementById('fOriginal').value    = o.originalPrice || '';
+        document.getElementById('fSale').value        = o.salePrice || '';
+        document.getElementById('fValidUntil').value  = o.validUntil;
+        document.getElementById('fTheme').value       = o.theme;
+        document.getElementById('fActive').checked    = o.active;
+        document.getElementById('submitBtn').innerHTML = '<i class="fa-solid fa-save"></i> Update Offer';
+        document.getElementById('cancelBtn').style.display = 'block';
+        document.getElementById('formHeading').innerHTML = '<i class="fa-solid fa-pen" style="color:#e91e63"></i> Edit Offer';
+        document.querySelector('.acard').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleActive(id) {
+        const o = offers.find(o => o.id === id);
+        if (!o) return;
+        o.active = !o.active;
+        showToast(o.active ? 'Offer activated!' : 'Offer deactivated!');
+        saveAndRefresh();
+    }
+
+    function deleteOffer(id) {
+        if (!confirm('Delete this offer permanently?')) return;
+        offers = offers.filter(o => o.id !== id);
+        showToast('Offer deleted.', 'err');
+        if (editingId === id) resetForm();
+        saveAndRefresh();
+    }
+
+    function resetForm() {
+        document.getElementById('offerForm').reset();
+        editingId = null;
+        document.getElementById('submitBtn').innerHTML = '<i class="fa-solid fa-plus"></i> Add Offer';
+        document.getElementById('cancelBtn').style.display = 'none';
+        document.getElementById('formHeading').innerHTML = '<i class="fa-solid fa-plus" style="color:#e91e63"></i> Add New Offer';
+        document.getElementById('fActive').checked = true;
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('fValidUntil').min = today;
+    }
+
+    /* ---- RENDER ---- */
+    function renderList() {
+        const list     = document.getElementById('offersList');
+        const countEl  = document.getElementById('offersCount');
+        const statsEl  = document.getElementById('statsRow');
+
+        countEl.textContent = `(${offers.length})`;
+
+        const aCount = offers.filter(o => getStatus(o) === 'active').length;
+        const iCount = offers.filter(o => getStatus(o) === 'inactive').length;
+        const eCount = offers.filter(o => getStatus(o) === 'expired').length;
+
+        statsEl.innerHTML = `
+            <div class="spill active"><i class="fa-solid fa-circle-check"></i> ${aCount} Active</div>
+            ${iCount ? `<div class="spill inactive"><i class="fa-solid fa-pause"></i> ${iCount} Inactive</div>` : ''}
+            ${eCount ? `<div class="spill expired"><i class="fa-regular fa-clock"></i> ${eCount} Expired</div>` : ''}
+        `;
+
+        if (offers.length === 0) {
+            list.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-tags"></i>
+                <p>No offers yet.<br>Add your first deal above!</p>
+            </div>`;
+            return;
+        }
+
+        const themeColors = {
+            pink:   '#e91e63',
+            purple: '#9c27b0',
+            orange: '#ff6f00',
+            blue:   '#1565c0',
+            green:  '#2e7d32'
+        };
+        const statusColors = { active: '#4caf50', inactive: '#ff9800', expired: '#f44336' };
+
+        list.innerHTML = offers.map(o => {
+            const st = getStatus(o);
+            const tc = themeColors[o.theme] || '#e91e63';
+            return `
+            <div class="offer-item ${st}">
+                <div class="oi-head">
+                    <div class="oi-head-left">
+                        <span class="oi-badge" style="background:${tc};">${o.badge}</span>
+                        <span class="oi-title">${o.title}</span>
+                    </div>
+                    <span class="oi-status" style="color:${statusColors[st]}">${st.toUpperCase()}</span>
+                </div>
+                ${o.description ? `<p class="oi-desc">${o.description}</p>` : ''}
+                <div class="oi-meta">
+                    ${o.originalPrice ? `<span><i class="fa-solid fa-tag"></i>Original: ₹${o.originalPrice}</span>` : ''}
+                    ${o.salePrice     ? `<span><i class="fa-solid fa-bolt"></i>Sale: ₹${o.salePrice}</span>`     : ''}
+                    <span><i class="fa-regular fa-calendar"></i>Until: ${fmtDate(o.validUntil)}</span>
+                </div>
+                <div class="oi-actions">
+                    <button onclick="editOffer(${o.id})" class="ba-edit"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button onclick="toggleActive(${o.id})" class="ba-toggle ${o.active ? 'deactivate' : 'activate'}">
+                        ${o.active
+                            ? '<i class="fa-solid fa-pause"></i> Deactivate'
+                            : '<i class="fa-solid fa-play"></i> Activate'}
+                    </button>
+                    <button onclick="deleteOffer(${o.id})" class="ba-delete"><i class="fa-solid fa-trash"></i> Delete</button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    /* ---- INIT ---- */
+    resetForm();
+</script>
+</body>
+</html>
