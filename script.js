@@ -342,21 +342,55 @@ function renderOfferCard(o) {
     </div>`;
 }
 
+// ========== OFFERS DATA (Global) ==========
+// Edit this list to update offers for everyone!
+const globalOffers = [
+    {
+        id: 1,
+        title: "Valentine's Special",
+        badge: "50% OFF",
+        description: "Get a romantic surprise page + music!",
+        originalPrice: 199,
+        salePrice: 99,
+        validUntil: "2026-02-28",
+        theme: "pink",
+        active: true
+    },
+    {
+        id: 2,
+        title: "New Year Deal",
+        badge: "SAVE ₹150",
+        description: "Get a sparkling New Year greeting page for your friends and family.",
+        originalPrice: 249,
+        salePrice: 99,
+        validUntil: "2027-01-05",
+        theme: "orange", // Can be: pink, purple, orange, blue, green
+        active: true
+    },
+];
+
 function loadOffers() {
-    try {
-        const offers = JSON.parse(localStorage.getItem('wis_offers') || '[]');
-        const today = new Date(); today.setHours(0, 0, 0, 0);
-        const active = offers.filter(o => {
-            if (!o.active) return false;
-            const end = new Date(o.validUntil); end.setHours(23, 59, 59, 999);
-            return end >= today;
-        });
-        const section = document.getElementById('offers-section');
-        if (!section) return;
-        if (active.length === 0) { section.style.display = 'none'; return; }
+    // 1. Try to get Admin overrides from LocalStorage
+    const localData = localStorage.getItem('wis_offers');
+    const offers = localData ? JSON.parse(localData) : globalOffers;
+
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const active = offers.filter(o => {
+        if (!o.active) return false;
+        const end = new Date(o.validUntil); end.setHours(23, 59, 59, 999);
+        return end >= today;
+    });
+
+    const section = document.getElementById('offers-section');
+    if (!section) return; // Exit if the offers section isn't on the page
+
+    if (active.length === 0) {
+        section.style.display = 'none';
+    } else {
         section.style.display = 'block';
         document.getElementById('offersGrid').innerHTML = active.map(renderOfferCard).join('');
-        // Live countdown
+        
+        // Start countdown timers for the active offers
         setInterval(() => {
             active.forEach(o => {
                 const el = document.getElementById(`countdown-${o.id}`);
@@ -364,41 +398,45 @@ function loadOffers() {
                 const tl = getOfferTimeLeft(o.validUntil);
                 if (!tl) { el.innerHTML = '<span style="color:rgba(255,255,255,0.5);font-size:12px;">Expired</span>'; return; }
                 const spans = el.querySelectorAll('.offer-count-item span');
-                if (spans[0]) spans[0].textContent = String(tl.d).padStart(2,'0');
-                if (spans[1]) spans[1].textContent = String(tl.h).padStart(2,'0');
-                if (spans[2]) spans[2].textContent = String(tl.m).padStart(2,'0');
-                if (spans[3]) spans[3].textContent = String(tl.s).padStart(2,'0');
+                if (spans.length !== 4) return;
+                spans[0].textContent = String(tl.d).padStart(2,'0');
+                spans[1].textContent = String(tl.h).padStart(2,'0');
+                spans[2].textContent = String(tl.m).padStart(2,'0');
+                spans[3].textContent = String(tl.s).padStart(2,'0');
             });
         }, 1000);
-        // Trigger scroll reveal
+
+        // Add the scroll-reveal effect to the newly added offer cards
         document.querySelectorAll('.offer-card').forEach(el => {
             el.classList.add('reveal-on-scroll');
             revealObserver.observe(el);
         });
-    } catch(e) { console.error('Offers error:', e); }
+    }
 }
 
 loadOffers();
 
-// ========== VISIT COUNTER ==========
+// ========== VISITOR TRACKING & LOGGING ==========
 (function trackVisit() {
-    // Use a free public API to track global visits across all devices
-    // Namespace: wedding-invitation-store, Key: visits
-    fetch('https://api.counterapi.dev/v1/wedding-invitation-store/visits/up')
-        .then(response => response.json())
-        .then(data => console.log('Visit counted:', data.count))
-        .catch(err => console.error('Counter API Error:', err));
+    const NAMESPACE = 'wedding-invitation-store';
+    const now = new Date();
+    const today = now.toISOString().split('T')[0]; // Format: 2025-02-19
 
-    // ========== VISITOR DETAILS (Console Log) ==========
-    // This demonstrates how to get Device & Location data
+    const month = today.slice(0, 7);               // Format: 2025-02
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    console.log('Visitor Device:', isMobile ? 'Mobile' : 'Desktop');
+    const device = isMobile ? 'device_mobile' : 'device_desktop';
 
-    // Fetch approximate location from IP address (Free Service)
-    fetch('https://ipapi.co/json/')
-        .then(res => res.json())
-        .then(data => {
-            console.log(`Visitor Location: ${data.city}, ${data.region}, ${data.country_name}`);
-        })
-        .catch(err => console.log('Location fetch failed'));
+    // Helper to hit an endpoint (fire and forget)
+    const hit = (key) => {
+        fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${key}/up`).catch(e => console.error(e));
+    };
+
+    // 1. Increment Total Global Visits
+    hit('visits');
+    // 2. Increment Today's Count (for Weekly Graph)
+    hit(`date_${today}`);
+    // 3. Increment Month Count
+    hit(`month_${month}`);
+    // 4. Increment Device Type (for Pie Chart)
+    hit(device);
 })();
