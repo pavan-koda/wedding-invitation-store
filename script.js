@@ -388,4 +388,17 @@ loadOffers();
         .then(response => response.json())
         .then(data => console.log('Visit counted:', data.value))
         .catch(err => console.error('Counter API Error:', err));
+
+    // ========== VISITOR DETAILS (Console Log) ==========
+    // This demonstrates how to get Device & Location data
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    console.log('Visitor Device:', isMobile ? 'Mobile' : 'Desktop');
+
+    // Fetch approximate location from IP address (Free Service)
+    fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => {
+            console.log(`Visitor Location: ${data.city}, ${data.region}, ${data.country_name}`);
+        })
+        .catch(err => console.log('Location fetch failed'));
 })();
