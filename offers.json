@@ -1,12 +1,12 @@
 [
     {
         "id": 1,
-        "title": "Valentine's Special",
+        "title": "Holi's Special",
         "badge": "50% OFF",
-        "description": "Get a romantic surprise page + music!",
+        "description": "Get a  page + music!",
         "originalPrice": 199,
         "salePrice": 99,
-        "validUntil": "2026-02-28",
+        "validUntil": "2026-03-28",
         "theme": "pink",
         "active": false
     },

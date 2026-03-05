@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="assets/img/logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         *, *::before, *::after {
             margin: 0;
@@ -643,11 +644,114 @@
             </div>
         </div>
 
+        <!-- ---- CHARTS ---- -->
+        <div class="acard" style="grid-column: 1 / -1;">
+            <h3 class="acard-title"><i class="fa-solid fa-chart-area"></i> Last 7 Days Traffic</h3>
+            <div style="height: 250px; width: 100%;">
+                <canvas id="weeklyChart"></canvas>
+            </div>
+        </div>
+
+        <div class="acard" style="grid-column: 1 / -1;">
+            <h3 class="acard-title"><i class="fa-solid fa-mobile-screen"></i> Device Breakdown</h3>
+            <div style="height: 250px; width: 100%; max-width: 400px; margin: 0 auto;">
+                <canvas id="deviceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- ---- ADD / EDIT FORM ---- -->
+        <div class="acard">
+            <h3 class="acard-title" id="formHeading">
+                <i class="fa-solid fa-plus"></i> Add New Offer
+            </h3>
+            <form id="offerForm" onsubmit="handleSubmit(event)">
+
+                <div class="fgroup">
+                    <label>Offer Title <span class="req">*</span></label>
+                    <input type="text" id="fTitle" placeholder="e.g. Valentine's Combo Deal" required>
+                </div>
+
+                <div class="fgroup">
+                    <label>Badge Text <span class="req">*</span></label>
+                    <input type="text" id="fBadge" placeholder="e.g. 50% OFF  |  FLASH SALE  |  COMBO" required>
+                </div>
+
+                <div class="fgroup">
+                    <label>Description</label>
+                    <textarea id="fDesc" placeholder="Describe what's included, conditions, etc."></textarea>
+                </div>
+
+                <div class="frow">
+                    <div class="fgroup">
+                        <label>Original Price (₹)</label>
+                        <input type="number" id="fOriginal" placeholder="e.g. 198" min="0">
+                    </div>
+                    <div class="fgroup">
+                        <label>Sale Price (₹)</label>
+                        <input type="number" id="fSale" placeholder="e.g. 99" min="0">
+                    </div>
+                </div>
+
+                <div class="frow">
+                    <div class="fgroup">
+                        <label>Valid Until <span class="req">*</span></label>
+                        <input type="date" id="fValidUntil" required>
+                    </div>
+                    <div class="fgroup">
+                        <label>Theme Color</label>
+                        <select id="fTheme">
+                            <option value="pink">🌸 Pink / Romantic</option>
+                            <option value="purple">💜 Purple / Premium</option>
+                            <option value="orange">🧡 Orange / Festival</option>
+                            <option value="blue">💙 Blue / Corporate</option>
+                            <option value="green">💚 Green / General</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="fcheck">
+                    <input type="checkbox" id="fActive" checked>
+                    <label for="fActive">Active — show on website immediately</label>
+                </div>
+
+                <div class="factions">
+                    <button type="submit" class="btn-save" id="submitBtn">
+                        <i class="fa-solid fa-plus"></i> Add Offer
+                    </button>
+                    <button type="button" class="btn-cancel" id="cancelBtn" onclick="resetForm()">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ---- OFFERS LIST ---- -->
+        <div class="acard">
+            <h3 class="acard-title">
+                <i class="fa-solid fa-tag"></i> All Offers
+                <span class="count" id="offersCount"></span>
+                <button onclick="copyJSON()" class="admin-pill" style="margin-left:auto; cursor:pointer; border:1px solid #4caf50; color:#4caf50; background:rgba(76,175,80,0.1);">
+                    <i class="fa-solid fa-copy"></i> Copy JSON
+                </button>
+                <button onclick="downloadStats()" class="admin-pill" style="margin-left:10px; cursor:pointer; border:1px solid #2196f3; color:#2196f3; background:rgba(33,150,243,0.1);">
+                    <i class="fa-solid fa-download"></i> Stats
+                </button>
+            </h3>
+            <div class="stats-row" id="statsRow"></div>
+            <div id="offersList"></div>
+        </div>
+
     </div>
 </div>
 
+<!-- ===== TOAST NOTIFICATION ===== -->
+<div id="toast" class="toast"></div>
+
 <script>
     const ADMIN_PASSWORD = 'admin123';
+
+    let offers = [];
+    let editingId = null;
 
     const loginWrap  = document.getElementById('loginWrap');
     const adminWrap  = document.getElementById('adminWrap');
@@ -659,6 +763,7 @@
         if (pwd === ADMIN_PASSWORD) {
             loginWrap.style.display = 'none';
             adminWrap.style.display = 'block';
+            loadOffers();
             loadStats();
         } else {
             err.style.display = 'block';
@@ -670,6 +775,207 @@
     document.getElementById('password').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') login();
     });
+
+    /* ---- TOAST ---- */
+    function showToast(msg, type = 'ok') {
+        const t = document.getElementById('toast');
+        t.innerHTML = `<i class="fa-solid ${type === 'ok' ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ${msg}`;
+        t.className = `toast show${type === 'err' ? ' err' : ''}`;
+        setTimeout(() => t.className = 'toast', 3200);
+    }
+
+    /* ---- HELPERS ---- */
+    function isExpired(validUntil) {
+        const d = new Date(validUntil); d.setHours(23,59,59,999);
+        return d < new Date();
+    }
+
+    function getStatus(o) {
+        if (!o.active) return 'inactive';
+        if (isExpired(o.validUntil)) return 'expired';
+        return 'active';
+    }
+
+    function fmtDate(d) {
+        return new Date(d + 'T23:59:59').toLocaleDateString('en-IN', {
+            day: 'numeric', month: 'short', year: 'numeric'
+        });
+    }
+
+    /* ---- CRUD (JSON FILE) ---- */
+    async function loadOffers() {
+        try {
+            const res = await fetch('offers.json');
+            if (res.ok) offers = await res.json();
+        } catch (e) { console.log('No offers.json found'); }
+        renderList();
+    }
+
+    function saveAndRefresh() {
+        // Just re-render the list in memory
+        renderList();
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        const data = {
+            title:         document.getElementById('fTitle').value.trim(),
+            badge:         document.getElementById('fBadge').value.trim(),
+            description:   document.getElementById('fDesc').value.trim(),
+            originalPrice: document.getElementById('fOriginal').value.trim(),
+            salePrice:     document.getElementById('fSale').value.trim(),
+            validUntil:    document.getElementById('fValidUntil').value,
+            theme:         document.getElementById('fTheme').value,
+            active:        document.getElementById('fActive').checked
+        };
+
+        if (editingId !== null) {
+            const i = offers.findIndex(o => o.id === editingId);
+            if (i !== -1) offers[i] = { ...offers[i], ...data };
+            showToast('Offer updated!');
+        } else {
+            offers.unshift({ id: Date.now(), ...data });
+            showToast('Offer added!');
+        }
+
+        saveAndRefresh();
+        resetForm();
+    }
+
+    function editOffer(id) {
+        const o = offers.find(o => o.id === id);
+        if (!o) return;
+        editingId = id;
+        document.getElementById('fTitle').value       = o.title;
+        document.getElementById('fBadge').value       = o.badge;
+        document.getElementById('fDesc').value        = o.description || '';
+        document.getElementById('fOriginal').value    = o.originalPrice || '';
+        document.getElementById('fSale').value        = o.salePrice || '';
+        document.getElementById('fValidUntil').value  = o.validUntil;
+        document.getElementById('fTheme').value       = o.theme;
+        document.getElementById('fActive').checked    = o.active;
+        document.getElementById('submitBtn').innerHTML = '<i class="fa-solid fa-save"></i> Update Offer';
+        document.getElementById('cancelBtn').style.display = 'block';
+        document.getElementById('formHeading').innerHTML = '<i class="fa-solid fa-pen" style="color:#e91e63"></i> Edit Offer';
+        document.querySelector('.acard').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleActive(id) {
+        const o = offers.find(o => o.id === id);
+        if (!o) return;
+        o.active = !o.active;
+        showToast(o.active ? 'Offer activated!' : 'Offer deactivated!');
+        saveAndRefresh();
+    }
+
+    function deleteOffer(id) {
+        if (!confirm('Delete this offer permanently?')) return;
+        offers = offers.filter(o => o.id !== id);
+        showToast('Offer deleted.', 'err');
+        if (editingId === id) resetForm();
+        saveAndRefresh();
+    }
+
+    function resetForm() {
+        document.getElementById('offerForm').reset();
+        editingId = null;
+        document.getElementById('submitBtn').innerHTML = '<i class="fa-solid fa-plus"></i> Add Offer';
+        document.getElementById('cancelBtn').style.display = 'none';
+        document.getElementById('formHeading').innerHTML = '<i class="fa-solid fa-plus" style="color:#e91e63"></i> Add New Offer';
+        document.getElementById('fActive').checked = true;
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('fValidUntil').min = today;
+    }
+
+    function copyJSON() {
+        const json = JSON.stringify(offers, null, 4);
+        navigator.clipboard.writeText(json).then(() => {
+            showToast('JSON copied! Paste into offers.json');
+        });
+    }
+
+    function downloadStats() {
+        const stats = {
+            total: document.getElementById('totalVisits').textContent,
+            month: document.getElementById('monthVisits').textContent,
+            today: document.getElementById('todayVisits').textContent,
+            date: new Date().toISOString()
+        };
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(stats, null, 4));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "site_stats.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+
+    /* ---- RENDER ---- */
+    function renderList() {
+        const list     = document.getElementById('offersList');
+        const countEl  = document.getElementById('offersCount');
+        const statsEl  = document.getElementById('statsRow');
+
+        countEl.textContent = `(${offers.length})`;
+
+        const aCount = offers.filter(o => getStatus(o) === 'active').length;
+        const iCount = offers.filter(o => getStatus(o) === 'inactive').length;
+        const eCount = offers.filter(o => getStatus(o) === 'expired').length;
+
+        statsEl.innerHTML = `
+            <div class="spill active"><i class="fa-solid fa-circle-check"></i> ${aCount} Active</div>
+            ${iCount ? `<div class="spill inactive"><i class="fa-solid fa-pause"></i> ${iCount} Inactive</div>` : ''}
+            ${eCount ? `<div class="spill expired"><i class="fa-regular fa-clock"></i> ${eCount} Expired</div>` : ''}
+        `;
+
+        if (offers.length === 0) {
+            list.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-tags"></i>
+                <p>No offers yet.<br>Add your first deal above!</p>
+            </div>`;
+            return;
+        }
+
+        const themeColors = {
+            pink:   '#e91e63',
+            purple: '#9c27b0',
+            orange: '#ff6f00',
+            blue:   '#1565c0',
+            green:  '#2e7d32'
+        };
+        const statusColors = { active: '#4caf50', inactive: '#ff9800', expired: '#f44336' };
+
+        list.innerHTML = offers.map(o => {
+            const st = getStatus(o);
+            const tc = themeColors[o.theme] || '#e91e63';
+            return `
+            <div class="offer-item ${st}">
+                <div class="oi-head">
+                    <div class="oi-head-left">
+                        <span class="oi-badge" style="background:${tc};">${o.badge}</span>
+                        <span class="oi-title">${o.title}</span>
+                    </div>
+                    <span class="oi-status" style="color:${statusColors[st]}">${st.toUpperCase()}</span>
+                </div>
+                ${o.description ? `<p class="oi-desc">${o.description}</p>` : ''}
+                <div class="oi-meta">
+                    ${o.originalPrice ? `<span><i class="fa-solid fa-tag"></i>Original: ₹${o.originalPrice}</span>` : ''}
+                    ${o.salePrice     ? `<span><i class="fa-solid fa-bolt"></i>Sale: ₹${o.salePrice}</span>`     : ''}
+                    <span><i class="fa-regular fa-calendar"></i>Until: ${fmtDate(o.validUntil)}</span>
+                </div>
+                <div class="oi-actions">
+                    <button onclick="editOffer(${o.id})" class="ba-edit"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button onclick="toggleActive(${o.id})" class="ba-toggle ${o.active ? 'deactivate' : 'activate'}">
+                        ${o.active
+                            ? '<i class="fa-solid fa-pause"></i> Deactivate'
+                            : '<i class="fa-solid fa-play"></i> Activate'}
+                    </button>
+                    <button onclick="deleteOffer(${o.id})" class="ba-delete"><i class="fa-solid fa-trash"></i> Delete</button>
+                </div>
+            </div>`;
+        }).join('');
+    }
 
     /* ---- STATS (API) ---- */
     async function loadStats() {
@@ -691,6 +997,63 @@
         document.getElementById('totalVisits').textContent = total;
         document.getElementById('monthVisits').textContent = month;
         document.getElementById('todayVisits').textContent = today;
+
+        // 2. Fetch Last 7 Days for Graph
+        const labels = [];
+        const dataPoints = [];
+        for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const dateStr = d.toISOString().split('T')[0];
+            labels.push(d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric' }));
+            dataPoints.push(await getCount(`date_${dateStr}`));
+        }
+
+        // 3. Fetch Device Stats
+        const mobile = await getCount('device_mobile');
+        const desktop = await getCount('device_desktop');
+
+        // ---- RENDER CHARTS ----
+        new Chart(document.getElementById('weeklyChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Visits',
+                    data: dataPoints,
+                    borderColor: '#e91e63',
+                    backgroundColor: 'rgba(233, 30, 99, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#aaa' } },
+                    x: { grid: { display: false }, ticks: { color: '#aaa' } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('deviceChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Mobile', 'Desktop/Laptop'],
+                datasets: [{
+                    data: [mobile, desktop],
+                    backgroundColor: ['#e91e63', '#4caf50'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } }
+            }
+        });
     }
 
     /* ---- INIT ---- */
