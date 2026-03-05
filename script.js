@@ -379,3 +379,13 @@ function loadOffers() {
 }
 
 loadOffers();
+
+// ========== VISIT COUNTER ==========
+(function trackVisit() {
+    // Use a free public API to track global visits across all devices
+    // Namespace: wedding-invitation-store-global, Key: visits
+    fetch('https://api.countapi.xyz/hit/wedding-invitation-store-global/visits')
+        .then(response => response.json())
+        .then(data => console.log('Visit counted:', data.value))
+        .catch(err => console.error('Counter API Error:', err));
+})();
