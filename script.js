@@ -383,10 +383,10 @@ loadOffers();
 // ========== VISIT COUNTER ==========
 (function trackVisit() {
     // Use a free public API to track global visits across all devices
-    // Namespace: wedding-invitation-store-global, Key: visits
-    fetch('https://api.countapi.xyz/hit/wedding-invitation-store-global/visits')
+    // Namespace: wedding-invitation-store, Key: visits
+    fetch('https://api.counterapi.dev/v1/wedding-invitation-store/visits/up')
         .then(response => response.json())
-        .then(data => console.log('Visit counted:', data.value))
+        .then(data => console.log('Visit counted:', data.count))
         .catch(err => console.error('Counter API Error:', err));
 
     // ========== VISITOR DETAILS (Console Log) ==========
