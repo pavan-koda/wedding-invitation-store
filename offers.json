@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "title": "Valentine's Special",
+        "badge": "50% OFF",
+        "description": "Get a romantic surprise page + music!",
+        "originalPrice": 199,
+        "salePrice": 99,
+        "validUntil": "2026-02-28",
+        "theme": "pink",
+        "active": false
+    },
+    {
+        "id": 2,
+        "title": "New Year Deal",
+        "badge": "SAVE ₹150",
+        "description": "Get a sparkling New Year greeting page for your friends and family.",
+        "originalPrice": 249,
+        "salePrice": 99,
+        "validUntil": "2027-01-05",
+        "theme": "orange",
+        "active": false
+    },
+    {
+        "id": 3,
+        "title": "Example Disabled Offer",
+        "badge": "EXPIRED",
+        "description": "This offer is hidden because active is set to false.",
+        "originalPrice": 500,
+        "salePrice": 0,
+        "validUntil": "2025-12-31",
+        "theme": "blue",
+        "active": false
+    }
+]

@@ -342,75 +342,52 @@ function renderOfferCard(o) {
     </div>`;
 }
 
-// ========== OFFERS DATA (Global) ==========
-// Edit this list to update offers for everyone!
-const globalOffers = [
-    {
-        id: 1,
-        title: "Valentine's Special",
-        badge: "50% OFF",
-        description: "Get a romantic surprise page + music!",
-        originalPrice: 199,
-        salePrice: 99,
-        validUntil: "2026-02-28",
-        theme: "pink",
-        active: true
-    },
-    {
-        id: 2,
-        title: "New Year Deal",
-        badge: "SAVE ₹150",
-        description: "Get a sparkling New Year greeting page for your friends and family.",
-        originalPrice: 249,
-        salePrice: 99,
-        validUntil: "2027-01-05",
-        theme: "orange", // Can be: pink, purple, orange, blue, green
-        active: true
-    },
-];
+async function loadOffers() {
+    try {
+        const response = await fetch('offers.json');
+        if (!response.ok) return; // Exit if file not found
+        const offers = await response.json();
 
-function loadOffers() {
-    // 1. Try to get Admin overrides from LocalStorage
-    const localData = localStorage.getItem('wis_offers');
-    const offers = localData ? JSON.parse(localData) : globalOffers;
-
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-    const active = offers.filter(o => {
-        if (!o.active) return false;
-        const end = new Date(o.validUntil); end.setHours(23, 59, 59, 999);
-        return end >= today;
-    });
-
-    const section = document.getElementById('offers-section');
-    if (!section) return; // Exit if the offers section isn't on the page
-
-    if (active.length === 0) {
-        section.style.display = 'none';
-    } else {
-        section.style.display = 'block';
-        document.getElementById('offersGrid').innerHTML = active.map(renderOfferCard).join('');
-        
-        // Start countdown timers for the active offers
-        setInterval(() => {
-            active.forEach(o => {
-                const el = document.getElementById(`countdown-${o.id}`);
-                if (!el) return;
-                const tl = getOfferTimeLeft(o.validUntil);
-                if (!tl) { el.innerHTML = '<span style="color:rgba(255,255,255,0.5);font-size:12px;">Expired</span>'; return; }
-                const spans = el.querySelectorAll('.offer-count-item span');
-                if (spans.length !== 4) return;
-                spans[0].textContent = String(tl.d).padStart(2,'0');
-                spans[1].textContent = String(tl.h).padStart(2,'0');
-                spans[2].textContent = String(tl.m).padStart(2,'0');
-                spans[3].textContent = String(tl.s).padStart(2,'0');
-            });
-        }, 1000);
-
-        // Add the scroll-reveal effect to the newly added offer cards
-        document.querySelectorAll('.offer-card').forEach(el => {
-            el.classList.add('reveal-on-scroll');
-            revealObserver.observe(el);
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        const active = offers.filter(o => {
+            if (!o.active) return false;
+            const end = new Date(o.validUntil); end.setHours(23, 59, 59, 999);
+            return end >= today;
         });
+
+        const section = document.getElementById('offers-section');
+        if (!section) return;
+
+        if (active.length === 0) {
+            section.style.display = 'none';
+        } else {
+            section.style.display = 'block';
+            document.getElementById('offersGrid').innerHTML = active.map(renderOfferCard).join('');
+            
+            // Start countdown timers
+            setInterval(() => {
+                active.forEach(o => {
+                    const el = document.getElementById(`countdown-${o.id}`);
+                    if (!el) return;
+                    const tl = getOfferTimeLeft(o.validUntil);
+                    if (!tl) { el.innerHTML = '<span style="color:rgba(255,255,255,0.5);font-size:12px;">Expired</span>'; return; }
+                    const spans = el.querySelectorAll('.offer-count-item span');
+                    if (spans.length !== 4) return;
+                    spans[0].textContent = String(tl.d).padStart(2,'0');
+                    spans[1].textContent = String(tl.h).padStart(2,'0');
+                    spans[2].textContent = String(tl.m).padStart(2,'0');
+                    spans[3].textContent = String(tl.s).padStart(2,'0');
+                });
+            }, 1000);
+
+            // Scroll reveal
+            document.querySelectorAll('.offer-card').forEach(el => {
+                el.classList.add('reveal-on-scroll');
+                revealObserver.observe(el);
+            });
+        }
+    } catch (e) {
+        console.error('Could not load offers:', e);
     }
 }
 
