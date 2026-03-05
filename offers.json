@@ -8,7 +8,7 @@
         "salePrice": 99,
         "validUntil": "2026-03-28",
         "theme": "pink",
-        "active": false
+        "active": true
     },
     {
         "id": 2,
